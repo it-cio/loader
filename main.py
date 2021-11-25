@@ -1,10 +1,17 @@
 import os
-import uvicorn
 import shutil
+import uvicorn
 from typing import List
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, Depends, UploadFile, File
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 app = FastAPI()
+security = HTTPBasic()
+
+
+@app.get("/authorization")
+def users(credentials: HTTPBasicCredentials = Depends(security)):
+    return {"username": credentials.username, "password": credentials.password}
 
 
 @app.post("/upload")
